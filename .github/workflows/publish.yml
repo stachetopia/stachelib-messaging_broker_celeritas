@@ -1,0 +1,26 @@
+name: Publish Package
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'oracle'
+          java-version: '21'
+
+      - name: Grant execute permission to Gradle
+        run: chmod +x gradlew
+
+      - name: Publish to GitHub Packages
+        run: ./gradlew publish -Pstachetopia.packages.publishing.username=${{ secrets.PUBLISHING_USERNAME }} -Pstachetopia.packages.publishing.token=${{ secrets.PUBLISHING_TOKEN }} -Pstachetopia.packages.installing.username=${{ secrets.INSTALLING_USERNAME }} -Pstachetopia.packages.installing.token=${{ secrets.INSTALLING_TOKEN }}
